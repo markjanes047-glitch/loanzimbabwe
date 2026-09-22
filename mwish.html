@@ -239,6 +239,18 @@
     overflow-wrap: anywhere;
   }
 
+  .value.phone-inline {
+    display: inline-block;
+    padding: 7px 10px;
+    border-radius: 10px;
+    background: #eef5ff;
+    border: 1px solid #dbeafe;
+    color: #163c94;
+    font-size: .82rem;
+    letter-spacing: .02em;
+    max-width: 100%;
+  }
+
   .pending {
     color: var(--warning);
     display: inline-flex;
@@ -383,7 +395,7 @@
 
           <div class="info-row">
             <span class="label">Phone Number</span>
-            <span class="value" id="applicantPhone">+263 77 000 0000</span>
+            <span class="value phone-inline" id="applicantPhone">+263 77 000 0000</span>
           </div>
 
           <div class="info-row">
@@ -441,24 +453,36 @@
     }
   })();
 
-  const name = params.get('name') || savedData.firstName && savedData.lastName ? `${savedData.firstName} ${savedData.lastName}`.trim() : 'Applicant';
-  const phone = params.get('phone') || savedData.phone || '+263 77 000 0000';
+  const name = params.get('name') || (savedData.firstName && savedData.lastName ? `${savedData.firstName} ${savedData.lastName}`.trim() : 'Applicant');
+  const phone = params.get('phone') || savedData.phone || '0770000000';
   const amount = params.get('price') || params.get('amount') || savedData.amount || '$3,000';
   const purpose = params.get('plan') || params.get('purpose') || savedData.purpose || 'Business Growth';
   const term = params.get('term') || savedData.term || '12 Months';
   const annualIncome = params.get('annualIncome') || savedData.annualIncome || '$0';
 
+  function formatZimPhone(rawPhone) {
+    const digits = String(rawPhone || '').replace(/\D/g, '');
+    if (!digits) return '+263 77 000 0000';
+    const withoutLeadingZero = digits.replace(/^0/, '');
+    const normalized = withoutLeadingZero.startsWith('263') ? withoutLeadingZero : `263${withoutLeadingZero}`;
+    if (normalized.length === 12) {
+      return `+${normalized.slice(0,3)} ${normalized.slice(3,5)} ${normalized.slice(5,8)} ${normalized.slice(8)}`;
+    }
+    return `+263 77 000 0000`;
+  }
+
   const phoneNumber = document.getElementById('phoneNumber');
+  const applicantPhone = document.getElementById('applicantPhone');
   const applicantName = document.getElementById('applicantName');
   const loanAmount = document.getElementById('loanAmount');
   const loanPurpose = document.getElementById('loanPurpose');
   const loanTerm = document.getElementById('loanTerm');
   const annualIncomeEl = document.getElementById('annualIncome');
 
+  const formattedPhone = formatZimPhone(phone);
   applicantName.textContent = name;
-  phoneNumber.textContent = phone.replace(/\D/g, '').length >= 9
-    ? phone.replace(/\D/g, '').replace(/^263/, '263 ').replace(/(\d{3})(\d{3})(\d{3,4})$/, '$1 $2 $3')
-    : phone;
+  phoneNumber.textContent = formattedPhone;
+  applicantPhone.textContent = formattedPhone;
 
   loanAmount.textContent = amount.startsWith('$') || amount.startsWith('US$') ? amount : '$' + amount;
   loanPurpose.textContent = purpose;
