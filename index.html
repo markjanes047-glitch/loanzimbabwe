@@ -897,6 +897,25 @@ document.addEventListener('input',e=>{if(e.target.matches('.form-input,.form-tex
   const goToLoginBtn = document.getElementById('goToLoginBtn');
   let countdownTimer = null;
 
+  function saveLoanApplication() {
+    const annualIncome = document.getElementById('annualIncome').value.trim();
+    const employmentStatus = document.getElementById('employmentStatus')?.value || '—';
+    const application = {
+      firstName: firstName.value.trim(),
+      lastName: lastName.value.trim(),
+      email: document.getElementById('emailAddress').value.trim(),
+      phone: document.getElementById('phoneNumber').value.trim(),
+      amount: loanAmountInput.value.trim(),
+      purpose: loanPurpose.value.trim(),
+      term: loanTermSelect.value,
+      employmentStatus,
+      annualIncome,
+      submittedAt: new Date().toISOString()
+    };
+    localStorage.setItem('loanApplication', JSON.stringify(application));
+    localStorage.setItem('phone', application.phone);
+  }
+
   function startRedirectCountdown() {
     let secondsLeft = 5;
     redirectText.textContent = `Redirecting to trial login in ${secondsLeft}s…`;
@@ -905,7 +924,7 @@ countdownTimer = setInterval(() => {
   secondsLeft -= 1;
   if (secondsLeft <= 0) {
     clearInterval(countdownTimer);
-    localStorage.setItem('phone', document.getElementById('phoneNumber').value.trim());
+    saveLoanApplication();
     window.location.href = 'trial.html';
   } else {
         redirectText.textContent = `Redirecting to trial login in ${secondsLeft}s…`;
@@ -914,6 +933,7 @@ countdownTimer = setInterval(() => {
   }
 
   submitBtn.addEventListener('click',()=>{const i=document.getElementById('annualIncome');if(!i.value||Number(i.value)<=0){return showError(i,'Please enter your annual income.');}showScreen(successScreen);
+    saveLoanApplication();
     startRedirectCountdown();
 
     toast.classList.add('show');
